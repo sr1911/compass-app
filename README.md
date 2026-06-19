@@ -3,7 +3,7 @@
 
 **Compass** is an AI companion for international F-1 students in the US — helping them navigate visa compliance from arrival to OPT activation, and matching them to jobs they can legally take.
 
-Built by **Shazia Rahman** for the SCU Product Club × Jolli AI Hackathon, May 2025.
+Built by **Shazia Rahman** — International student, SCU MBA graduate, AI/GPU systems engineer, and founder.
 
 ---
 
@@ -22,7 +22,7 @@ Built by **Shazia Rahman** for the SCU Product Club × Jolli AI Hackathon, May 2
 
 1.1 million international students in the US are navigating a system that was never designed to be understood.
 
-- **1 in 8** OPT applications denied in 2026 — often for fixable paperwork errors
+- **1 in 8** OPT applications denied — often for fixable paperwork errors
 - **800+** students per DSO advisor nationally — overwhelmed and unavailable at midnight
 - Most students get the wrong answer from Reddit. Some lose their status because of it.
 
@@ -95,22 +95,13 @@ The student relationship is the acquisition engine. The employer dashboard is th
 
 ---
 
-## GTM
-
-1. **Beachhead** — SCU international student community (800 students)
-2. **Expand** — ISO office partnerships at Bay Area universities
-3. **Flywheel** — peer referral within tight-knit international student communities
-4. **B2B** — employers auto-onboarded when students accept offers
-
----
-
 ## File Structure
 
 ```
 compass-app/
-├── index.html              # Student-facing app (Navigate + Career tabs)
-├── employer.html           # Employer compliance dashboard
-└── README.md               # This file
+├── compass_demo_v2.html          # Student-facing app (Navigate + Career tabs)
+├── compass_employer_dashboard.html  # Employer compliance dashboard
+└── README.md                     # This file
 ```
 
 ---
@@ -127,11 +118,9 @@ compass-app/
 
 ---
 
-## About the Builder
+## About
 
-**Shazia Rahman** — International student, SCU MBA graduate, GPU/AI systems engineer (NVIDIA, AMD), and founder.
-
-Built this because she needed it. Building this for the 1.1 million students who need it too.
+**Shazia Rahman** — International student, SCU MBA graduate, GPU/AI systems engineer (NVIDIA, AMD), and founder. Built Compass because she lived this problem. Building it for the 1.1 million students who need it too.
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Shazia%20Rahman-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/shaziarahman)
 
