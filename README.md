@@ -122,7 +122,7 @@ compass-app/
 
 **Shazia Rahman** — International student, SCU MBA graduate, GPU/AI systems engineer (NVIDIA, AMD), and founder. Built Compass because she lived this problem. Building it for the 1.1 million students who need it too.
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Shazia%20Rahman-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/shaziarahman)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Shazia%20Rahman-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/shazia-rahman-empathetic-curious-business-leader)
 
 ---
 
