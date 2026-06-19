@@ -78,11 +78,18 @@ The student relationship is the acquisition engine. The employer dashboard is th
 
 ## Business Model
 
-| Tier | Price | Who |
-|------|-------|-----|
-| Free | $0 | Students — basic OPT navigation |
-| Pro | $19/month | Students — full timeline, career matching, alerts |
-| Business | $2K–10K/month | Employers — workforce compliance dashboard |
+Free for international students. Always.
+
+The revenue sits on the employer side — but not as another compliance dashboard. Compass's employer layer is differentiated because students naturally onboard their employers when they accept a job offer. No cold sales. No 6-month enterprise implementation.
+
+**Student trust → employer network → compliance visibility.**
+
+| Who | Price | What |
+|-----|-------|------|
+| Students | Free | OPT navigation, career matching, deadline alerts |
+| Employers | TBD | Workforce authorization tracking — auto-onboarded via student network |
+
+> Employer monetization is in design phase. The student companion is the core product.
 
 ---
 
@@ -91,7 +98,7 @@ The student relationship is the acquisition engine. The employer dashboard is th
 - **1.1M** international students in the US
 - **220K** new F-1 arrivals every year
 - **418K** students currently on OPT
-- 1% penetration at Pro tier = **$528K ARR**
+- Large, underserved, and growing — driven by international student enrollment trends
 
 ---
 
