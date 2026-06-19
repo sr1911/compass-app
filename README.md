@@ -1,9 +1,20 @@
 # 🧭 Compass
 ### Always know where you are and what's next.
 
-**Compass** is an interactive AI companion prototype for international F-1 students in the US — helping them navigate visa compliance from arrival to OPT activation and matching them with jobs they can legally take.
+**Compass** is an AI companion for international F-1 students in the US — helping them navigate visa compliance from arrival to OPT activation, and matching them to jobs they can legally take.
 
 Built by **Shazia Rahman** for the SCU Product Club × Jolli AI Hackathon, May 2025.
+
+---
+
+## Live Demo
+
+| App | Link |
+|-----|------|
+| 🎓 Student App | [compass-app](https://sr1911.github.io/compass-app) |
+| 🏢 Employer Dashboard | [compass-employer](https://sr1911.github.io/compass-app/employer.html) |
+
+> **Note:** This is a frontend HTML/CSS/JavaScript prototype demonstrating the full product vision — UI, user journey, and feature set. Pre-loaded responses simulate AI behavior. Backend and live AI integration are the next build phase.
 
 ---
 
@@ -39,14 +50,21 @@ Compass is two things in one:
 
 ---
 
-## Demo Files
+## Tech Stack
 
-| File | Description |
-|------|-------------|
-| `compass_demo_v2.html` | Student-facing app — Navigate + Career tabs |
-| `compass_employer_dashboard.html` | Employer-facing compliance dashboard |
+**Prototype** — Frontend only
+- HTML, CSS, vanilla JavaScript
+- No backend or framework
+- Pre-loaded responses simulating AI behavior
+- Single file — runs in any browser with no installation
 
-Open either file directly in any browser. No installation, no server, no dependencies.
+**Production roadmap**
+- Backend: Node.js or Python FastAPI
+- AI layer: Gemini API or Claude API
+- Database: Supabase / PostgreSQL
+- Auth: Firebase Auth
+- Job data: Indeed API, LinkedIn API, Handshake
+- Deployment: Google Cloud Run via Google AI Studio
 
 ---
 
@@ -86,33 +104,36 @@ The student relationship is the acquisition engine. The employer dashboard is th
 
 ---
 
-## Tech Stack (Prototype)
+## File Structure
 
-- Vanilla HTML, CSS, JavaScript — no frameworks
-- Designed for Claude API integration on the backend
-- Single-file architecture — deployable anywhere instantly
+```
+compass-app/
+├── index.html              # Student-facing app (Navigate + Career tabs)
+├── employer.html           # Employer compliance dashboard
+└── README.md               # This file
+```
 
 ---
 
 ## What's Next
 
-- [ ] Live Claude API integration for real-time AI responses
+- [ ] Live Gemini API integration for real-time AI responses
 - [ ] User authentication and persistent timeline tracking
 - [ ] USCIS processing time API integration
 - [ ] Job board API connections (Indeed, LinkedIn, Handshake)
 - [ ] Employer dashboard with HRIS integrations
 - [ ] Mobile app (React Native)
+- [ ] Publish to Google AI Studio
 
 ---
 
 ## About the Builder
 
-**Shazia Rahman** — International student, SCU MBA graduate, GPU/AI systems engineer (NVIDIA, AMD), certified Conscious Parenting coach, and founder.
+**Shazia Rahman** — International student, SCU MBA graduate, GPU/AI systems engineer (NVIDIA, AMD), and founder.
 
 Built this because she needed it. Building this for the 1.1 million students who need it too.
 
-- [LinkedIn](https://www.linkedin.com/in/shaziarahman)
-- SCU Leavey School of Business, MBA 2025
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Shazia%20Rahman-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/shaziarahman)
 
 ---
 
