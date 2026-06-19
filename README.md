@@ -1,7 +1,7 @@
 # 🧭 Compass
 ### Always know where you are and what's next.
 
-**Compass** is an AI companion for international F-1 students in the US — helping them navigate visa compliance from arrival to OPT activation, and matching them to jobs they can legally take.
+**Compass** is an interactive AI companion prototype for international F-1 students in the US — helping them navigate visa compliance from arrival to OPT activation and matching them with jobs they can legally take.
 
 Built by **Shazia Rahman** for the SCU Product Club × Jolli AI Hackathon, May 2025.
 
