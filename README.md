@@ -11,8 +11,8 @@ Built by **Shazia Rahman** for the SCU Product Club × Jolli AI Hackathon, May 2
 
 | App | Link |
 |-----|------|
-| 🎓 Student App | [compass-app](https://sr1911.github.io/compass-app) |
-| 🏢 Employer Dashboard | [compass-employer](https://sr1911.github.io/compass-app/employer.html) |
+| 🎓 Student App | [Open app](https://sr1911.github.io/compass-app/compass_demo_v2.html) |
+| 🏢 Employer Dashboard | [Open dashboard](https://sr1911.github.io/compass-app/compass_employer_dashboard.html) |
 
 > **Note:** This is a frontend HTML/CSS/JavaScript prototype demonstrating the full product vision — UI, user journey, and feature set. Pre-loaded responses simulate AI behavior. Backend and live AI integration are the next build phase.
 
