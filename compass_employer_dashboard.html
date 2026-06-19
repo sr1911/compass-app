@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compass for Business — International Talent Compliance Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#08080F;--ink-soft:#12121E;--ink-mid:#1C1C2E;
+  --surface:#1E1E30;--surface-up:#252538;
+  --rim:rgba(255,255,255,0.07);--rim-bright:rgba(255,255,255,0.12);
+  --violet:#7B6EF6;--violet-bright:#9B8FFF;--violet-dim:rgba(123,110,246,0.15);
+  --teal:#00D4A8;--teal-dim:rgba(0,212,168,0.12);
+  --amber:#F5A623;--amber-dim:rgba(245,166,35,0.12);
+  --rose:#FF6B8A;--rose-dim:rgba(255,107,138,0.12);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.12);
+  --white:#FFFFFF;--text:#E8E8F0;--text-soft:#9090A8;--text-dim:#5A5A72;
+  --r-sm:8px;--r-md:12px;--r-lg:18px;--r-xl:24px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:56px;border-bottom:1px solid var(--rim);background:rgba(8,8,15,0.9);backdrop-filter:blur(20px);position:relative;z-index:10;flex-shrink:0}
+.logo{font-family:'Fraunces',serif;font-size:20px;font-weight:400;color:var(--white);display:flex;align-items:center;gap:10px;letter-spacing:-0.02em}
+.logo-mark{width:28px;height:28px;background:linear-gradient(135deg,var(--violet),var(--teal));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;color:white;font-family:'DM Sans',sans-serif;font-weight:500}
+.logo-tag{font-size:11px;font-weight:500;background:var(--violet-dim);color:var(--violet-bright);border:1px solid rgba(123,110,246,0.25);border-radius:99px;padding:3px 10px;font-family:'DM Sans',sans-serif}
+.nav-right{display:flex;align-items:center;gap:12px}
+.company-pill{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--rim-bright);border-radius:99px;padding:5px 14px 5px 8px;font-size:12px;color:var(--text-soft)}
+.company-av{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#4F46E5,#06B6D4);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:white;flex-shrink:0}
+.notif-btn{width:34px;height:34px;background:var(--surface);border:1px solid var(--rim-bright);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;position:relative}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--rose);border:2px solid var(--ink)}
+
+/* LAYOUT */
+.layout{display:flex;flex:1;overflow:hidden;position:relative;z-index:1}
+
+/* SIDENAV */
+.sidenav{width:220px;border-right:1px solid var(--rim);padding:16px 12px;display:flex;flex-direction:column;gap:4px;background:rgba(18,18,30,0.5);flex-shrink:0;overflow-y:auto}
+.snav-section{font-size:10px;font-weight:500;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;padding:8px 10px 4px}
+.snav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r-sm);cursor:pointer;transition:all 0.15s;font-size:13px;color:var(--text-soft);border:1px solid transparent}
+.snav-item:hover{background:var(--surface);color:var(--text)}
+.snav-item.active{background:var(--violet-dim);border-color:rgba(123,110,246,0.2);color:var(--violet-bright)}
+.snav-ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.snav-badge{margin-left:auto;font-size:10px;font-weight:500;background:var(--rose-dim);color:var(--rose);border-radius:99px;padding:1px 7px}
+.snav-badge.amber{background:var(--amber-dim);color:var(--amber)}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;padding:24px 28px;display:flex;flex-direction:column;gap:20px}
+
+/* PAGE HEADER */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.ph-title{font-family:'Fraunces',serif;font-size:24px;font-weight:400;color:var(--white);margin-bottom:4px;letter-spacing:-0.02em}
+.ph-sub{font-size:13px;color:var(--text-soft)}
+.ph-actions{display:flex;gap:8px}
+.btn-primary{font-size:13px;font-weight:500;padding:8px 18px;border-radius:var(--r-md);background:var(--violet);border:none;color:white;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.btn-primary:hover{background:var(--violet-bright)}
+.btn-secondary{font-size:13px;padding:8px 18px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--rim-bright);color:var(--text-soft);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.btn-secondary:hover{color:var(--text)}
+
+/* ALERT BANNER */
+.alert-banner{background:rgba(255,107,138,0.06);border:1px solid rgba(255,107,138,0.2);border-radius:var(--r-lg);padding:14px 18px;display:flex;align-items:center;gap:14px}
+.ab-icon{font-size:20px;flex-shrink:0}
+.ab-text{flex:1}
+.ab-title{font-size:13px;font-weight:500;color:var(--white);margin-bottom:3px}
+.ab-sub{font-size:12px;color:var(--text-soft);line-height:1.5}
+.ab-btn{font-size:12px;font-weight:500;padding:7px 14px;border-radius:var(--r-sm);background:rgba(255,107,138,0.15);border:1px solid rgba(255,107,138,0.25);color:var(--rose);cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0}
+
+/* STAT CARDS */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat-card{background:var(--surface);border:1px solid var(--rim-bright);border-radius:var(--r-lg);padding:16px;position:relative;overflow:hidden}
+.stat-card.urgent{border-color:rgba(255,107,138,0.3)}
+.stat-card.warn{border-color:rgba(245,166,35,0.25)}
+.stat-card.good{border-color:rgba(0,212,168,0.25)}
+.sc-label{font-size:11px;color:var(--text-dim);margin-bottom:8px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase}
+.sc-num{font-family:'Fraunces',serif;font-size:36px;font-weight:400;color:var(--white);line-height:1;margin-bottom:4px}
+.sc-sub{font-size:11px;color:var(--text-soft)}
+.sc-badge{position:absolute;top:14px;right:14px;font-size:10px;font-weight:500;padding:3px 8px;border-radius:99px}
+.scb-red{background:var(--rose-dim);color:var(--rose)}
+.scb-amber{background:var(--amber-dim);color:var(--amber)}
+.scb-teal{background:var(--teal-dim);color:var(--teal)}
+.scb-violet{background:var(--violet-dim);color:var(--violet-bright)}
+
+/* SECTION */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sh-title{font-size:13px;font-weight:500;color:var(--text)}
+.sh-link{font-size:12px;color:var(--violet-bright);cursor:pointer}
+
+/* EMPLOYEE TABLE */
+.emp-table{background:var(--surface);border:1px solid var(--rim-bright);border-radius:var(--r-lg);overflow:hidden}
+.et-header{display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr 1.2fr 1fr 100px;gap:12px;padding:11px 18px;border-bottom:1px solid var(--rim);font-size:10px;font-weight:500;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase}
+.et-row{display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr 1.2fr 1fr 100px;gap:12px;padding:13px 18px;border-bottom:1px solid var(--rim);align-items:center;transition:background 0.15s;cursor:pointer}
+.et-row:last-child{border-bottom:none}
+.et-row:hover{background:rgba(255,255,255,0.02)}
+.et-row.urgent-row{background:rgba(255,107,138,0.04)}
+.et-row.warn-row{background:rgba(245,166,35,0.03)}
+.emp-info{display:flex;align-items:center;gap:10px}
+.emp-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0;color:white}
+.emp-name{font-size:13px;font-weight:500;color:var(--white)}
+.emp-role{font-size:11px;color:var(--text-dim)}
+.visa-badge{font-size:10px;font-weight:500;padding:3px 9px;border-radius:99px}
+.vb-f1{background:var(--violet-dim);color:var(--violet-bright);border:1px solid rgba(123,110,246,0.2)}
+.vb-h1{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(0,212,168,0.2)}
+.vb-opt{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,166,35,0.2)}
+.days-left{font-size:13px;font-weight:500}
+.dl-red{color:var(--rose)}
+.dl-amber{color:var(--amber)}
+.dl-green{color:var(--teal)}
+.status-pill{font-size:10px;font-weight:500;padding:3px 9px;border-radius:99px}
+.sp-good{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(0,212,168,0.2)}
+.sp-warn{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,166,35,0.2)}
+.sp-urgent{background:var(--rose-dim);color:var(--rose);border:1px solid rgba(255,107,138,0.2)}
+.act-btn{font-size:11px;padding:5px 12px;border-radius:var(--r-sm);border:1px solid var(--rim-bright);background:none;color:var(--text-soft);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;white-space:nowrap}
+.act-btn:hover{background:var(--violet-dim);border-color:rgba(123,110,246,0.3);color:var(--violet-bright)}
+.act-btn.urgent-act{background:var(--rose-dim);border-color:rgba(255,107,138,0.3);color:var(--rose)}
+
+/* BOTTOM GRID */
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* TIMELINE CARD */
+.timeline-card{background:var(--surface);border:1px solid var(--rim-bright);border-radius:var(--r-lg);padding:18px}
+.tl-item{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;position:relative}
+.tl-item:last-child{margin-bottom:0}
+.tl-item::before{content:'';position:absolute;left:14px;top:28px;bottom:-14px;width:1px;background:var(--rim)}
+.tl-item:last-child::before{display:none}
+.tl-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px}
+.tl-content{flex:1}
+.tl-title{font-size:13px;font-weight:500;color:var(--white);margin-bottom:2px}
+.tl-sub{font-size:12px;color:var(--text-soft);line-height:1.5}
+.tl-date{font-size:11px;color:var(--text-dim);margin-top:3px}
+
+/* INSIGHT CARD */
+.insight-card{background:var(--surface);border:1px solid var(--rim-bright);border-radius:var(--r-lg);padding:18px}
+.insight-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--rim)}
+.insight-item:last-child{border-bottom:none;padding-bottom:0}
+.insight-ico{width:32px;height:32px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.insight-body{flex:1}
+.insight-title{font-size:13px;font-weight:500;color:var(--white);margin-bottom:3px}
+.insight-sub{font-size:12px;color:var(--text-soft);line-height:1.5}
+.insight-action{font-size:11px;color:var(--violet-bright);margin-top:4px;cursor:pointer}
+
+/* NETWORK EFFECT BANNER */
+.network-banner{background:linear-gradient(135deg,rgba(123,110,246,0.1),rgba(0,212,168,0.06));border:1px solid rgba(123,110,246,0.2);border-radius:var(--r-lg);padding:16px 20px;display:flex;align-items:center;gap:16px}
+.nb-icon{font-size:28px;flex-shrink:0}
+.nb-title{font-size:14px;font-weight:500;color:var(--white);margin-bottom:4px}
+.nb-sub{font-size:12px;color:var(--text-soft);line-height:1.55}
+.nb-stat{text-align:right;flex-shrink:0}
+.nb-num{font-family:'Fraunces',serif;font-size:28px;color:var(--teal);line-height:1}
+.nb-label{font-size:11px;color:var(--text-dim)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp 0.3s ease forwards}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:99px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div class="logo">
+      <div class="logo-mark">C</div>
+      Compass
+    </div>
+    <span class="logo-tag">for Business</span>
+  </div>
+  <div class="nav-right">
+    <div class="company-pill">
+      <div class="company-av">T</div>
+      TechCorp Inc.
+    </div>
+    <div class="notif-btn">🔔<div class="notif-dot"></div></div>
+    <div class="company-pill" style="gap:6px">
+      <div class="company-av" style="background:linear-gradient(135deg,var(--violet),var(--rose))">HR</div>
+      Sarah Chen · HR Lead
+    </div>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- SIDENAV -->
+  <div class="sidenav">
+    <div class="snav-section">Overview</div>
+    <div class="snav-item active"><span class="snav-ico">📊</span>Dashboard</div>
+    <div class="snav-item"><span class="snav-ico">⚠️</span>Alerts<span class="snav-badge">3</span></div>
+
+    <div class="snav-section">Workforce</div>
+    <div class="snav-item"><span class="snav-ico">👥</span>All Employees</div>
+    <div class="snav-item"><span class="snav-ico">⏱</span>OPT Tracking<span class="snav-badge amber">2</span></div>
+    <div class="snav-item"><span class="snav-ico">🌱</span>STEM OPT</div>
+    <div class="snav-item"><span class="snav-ico">🚀</span>H-1B Pipeline</div>
+    <div class="snav-item"><span class="snav-ico">💼</span>CPT Workers</div>
+
+    <div class="snav-section">Compliance</div>
+    <div class="snav-item"><span class="snav-ico">✅</span>E-Verify Status</div>
+    <div class="snav-item"><span class="snav-ico">📋</span>I-9 Management</div>
+    <div class="snav-item"><span class="snav-ico">📅</span>Deadline Calendar</div>
+    <div class="snav-item"><span class="snav-ico">📁</span>Document Vault</div>
+
+    <div class="snav-section">Intelligence</div>
+    <div class="snav-item"><span class="snav-ico">🧭</span>Compass Insights</div>
+    <div class="snav-item"><span class="snav-ico">📈</span>H-1B Analytics</div>
+    <div class="snav-item"><span class="snav-ico">⚖️</span>Risk Report</div>
+
+    <div class="snav-section">Settings</div>
+    <div class="snav-item"><span class="snav-ico">🏢</span>Company Profile</div>
+    <div class="snav-item"><span class="snav-ico">🔗</span>Integrations</div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- HEADER -->
+    <div class="page-header fade-up">
+      <div>
+        <p class="ph-title">Compliance Dashboard</p>
+        <p class="ph-sub">International workforce · TechCorp Inc. · 47 employees on work authorization</p>
+      </div>
+      <div class="ph-actions">
+        <button class="btn-secondary">Export report</button>
+        <button class="btn-primary">+ Add employee</button>
+      </div>
+    </div>
+
+    <!-- ALERT BANNER -->
+    <div class="alert-banner fade-up">
+      <div class="ab-icon">🚨</div>
+      <div class="ab-text">
+        <p class="ab-title">3 employees require immediate action this week</p>
+        <p class="ab-sub">Aisha Patel's OPT expires in 12 days — STEM OPT extension must be filed immediately. Marcus Chen's I-9 reverification due in 5 days. Priya Sharma's EAD card not yet received — job start at risk.</p>
+      </div>
+      <button class="ab-btn">Review all →</button>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="stat-grid fade-up">
+      <div class="stat-card urgent">
+        <div class="sc-badge scb-red">Action needed</div>
+        <p class="sc-label">Expiring soon</p>
+        <p class="sc-num">3</p>
+        <p class="sc-sub">authorizations expiring within 30 days</p>
+      </div>
+      <div class="stat-card warn">
+        <div class="sc-badge scb-amber">Monitor</div>
+        <p class="sc-label">OPT workers</p>
+        <p class="sc-num">18</p>
+        <p class="sc-sub">active OPT employees tracked</p>
+      </div>
+      <div class="stat-card good">
+        <div class="sc-badge scb-teal">On track</div>
+        <p class="sc-label">H-1B pipeline</p>
+        <p class="sc-num">7</p>
+        <p class="sc-sub">employees in H-1B sponsorship process</p>
+      </div>
+      <div class="stat-card">
+        <div class="sc-badge scb-violet">All verified</div>
+        <p class="sc-label">E-Verify status</p>
+        <p class="sc-num">47</p>
+        <p class="sc-sub">employees verified · 100% compliant</p>
+      </div>
+    </div>
+
+    <!-- EMPLOYEE TABLE -->
+    <div class="fade-up">
+      <div class="section-head">
+        <span class="sh-title">⚡ Requires attention — sorted by urgency</span>
+        <span class="sh-link">View all 47 employees →</span>
+      </div>
+      <div class="emp-table">
+        <div class="et-header">
+          <span>Employee</span>
+          <span>Visa type</span>
+          <span>Auth expires</span>
+          <span>Days left</span>
+          <span>Status</span>
+          <span>Next action</span>
+          <span></span>
+        </div>
+
+        <div class="et-row urgent-row">
+          <div class="emp-info">
+            <div class="emp-av" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">AP</div>
+            <div><p class="emp-name">Aisha Patel</p><p class="emp-role">ML Engineer · AI Team</p></div>
+          </div>
+          <span><span class="visa-badge vb-opt">OPT → STEM</span></span>
+          <span style="font-size:13px;color:var(--text-soft)">June 2, 2025</span>
+          <span class="days-left dl-red">12 days</span>
+          <span><span class="status-pill sp-urgent">File STEM OPT now</span></span>
+          <span style="font-size:12px;color:var(--text-soft)">File I-765 extension</span>
+          <span><button class="act-btn urgent-act">Act now</button></span>
+        </div>
+
+        <div class="et-row warn-row">
+          <div class="emp-info">
+            <div class="emp-av" style="background:linear-gradient(135deg,#3B82F6,#8B5CF6)">MC</div>
+            <div><p class="emp-name">Marcus Chen</p><p class="emp-role">Sr. Software Engineer</p></div>
+          </div>
+          <span><span class="visa-badge vb-h1">H-1B</span></span>
+          <span style="font-size:13px;color:var(--text-soft)">Oct 15, 2025</span>
+          <span class="days-left dl-amber">148 days</span>
+          <span><span class="status-pill sp-warn">I-9 reverify due</span></span>
+          <span style="font-size:12px;color:var(--text-soft)">Reverify by June 7</span>
+          <span><button class="act-btn">Reverify</button></span>
+        </div>
+
+        <div class="et-row warn-row">
+          <div class="emp-info">
+            <div class="emp-av" style="background:linear-gradient(135deg,#10B981,#3B82F6)">PS</div>
+            <div><p class="emp-name">Priya Sharma</p><p class="emp-role">Data Scientist · Analytics</p></div>
+          </div>
+          <span><span class="visa-badge vb-opt">OPT</span></span>
+          <span style="font-size:13px;color:var(--text-soft)">Aug 16, 2025</span>
+          <span class="days-left dl-amber">88 days</span>
+          <span><span class="status-pill sp-warn">EAD not received</span></span>
+          <span style="font-size:12px;color:var(--text-soft)">Request USCIS expedite</span>
+          <span><button class="act-btn">Follow up</button></span>
+        </div>
+
+        <div class="et-row">
+          <div class="emp-info">
+            <div class="emp-av" style="background:linear-gradient(135deg,#6366F1,#EC4899)">RK</div>
+            <div><p class="emp-name">Ravi Kumar</p><p class="emp-role">Product Manager</p></div>
+          </div>
+          <span><span class="visa-badge vb-h1">H-1B</span></span>
+          <span style="font-size:13px;color:var(--text-soft)">Apr 1, 2026</span>
+          <span class="days-left dl-green">305 days</span>
+          <span><span class="status-pill sp-good">Compliant</span></span>
+          <span style="font-size:12px;color:var(--text-soft)">Renewal in Oct 2025</span>
+          <span><button class="act-btn">View</button></span>
+        </div>
+
+        <div class="et-row">
+          <div class="emp-info">
+            <div class="emp-av" style="background:linear-gradient(135deg,#F59E0B,#10B981)">SL</div>
+            <div><p class="emp-name">Sofia Lopez</p><p class="emp-role">UX Designer</p></div>
+          </div>
+          <span><span class="visa-badge vb-f1">OPT-STEM</span></span>
+          <span style="font-size:13px;color:var(--text-soft)">Mar 15, 2027</span>
+          <span class="days-left dl-green">663 days</span>
+          <span><span class="status-pill sp-good">Compliant</span></span>
+          <span style="font-size:12px;color:var(--text-soft)">H-1B lottery Mar 2026</span>
+          <span><button class="act-btn">View</button></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM GRID -->
+    <div class="bottom-grid fade-up">
+
+      <!-- TIMELINE -->
+      <div class="timeline-card">
+        <div class="section-head" style="margin-bottom:16px">
+          <span class="sh-title">📅 Upcoming compliance timeline</span>
+          <span class="sh-link">Full calendar →</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--rose-dim);border:1px solid rgba(255,107,138,0.3)">🚨</div>
+          <div class="tl-content">
+            <p class="tl-title">Aisha Patel — STEM OPT extension</p>
+            <p class="tl-sub">File I-765 immediately. Risk of work authorization gap.</p>
+            <p class="tl-date">Due: June 2, 2025 · 12 days</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--amber-dim);border:1px solid rgba(245,166,35,0.3)">⚠️</div>
+          <div class="tl-content">
+            <p class="tl-title">Marcus Chen — I-9 reverification</p>
+            <p class="tl-sub">H-1B extension approved. Reverify I-9 with new docs.</p>
+            <p class="tl-date">Due: June 7, 2025 · 17 days</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--violet-dim);border:1px solid rgba(123,110,246,0.3)">📋</div>
+          <div class="tl-content">
+            <p class="tl-title">H-1B lottery prep — 4 employees</p>
+            <p class="tl-sub">Begin gathering documents for March 2026 registration.</p>
+            <p class="tl-date">Start by: October 2025</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--teal-dim);border:1px solid rgba(0,212,168,0.3)">✅</div>
+          <div class="tl-content">
+            <p class="tl-title">Annual E-Verify audit</p>
+            <p class="tl-sub">All 47 employees verified. No action needed.</p>
+            <p class="tl-date">Completed: May 1, 2025</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPASS INSIGHTS -->
+      <div class="insight-card">
+        <div class="section-head" style="margin-bottom:16px">
+          <span class="sh-title">🧭 Compass insights for TechCorp</span>
+        </div>
+        <div class="insight-item">
+          <div class="insight-ico" style="background:var(--rose-dim)">⚡</div>
+          <div class="insight-body">
+            <p class="insight-title">STEM OPT extension window closing</p>
+            <p class="insight-sub">3 employees eligible for STEM OPT must file within 90 days of their OPT expiry. Missing this window means losing talent and restarting the hiring process.</p>
+            <p class="insight-action">View affected employees →</p>
+          </div>
+        </div>
+        <div class="insight-item">
+          <div class="insight-ico" style="background:var(--amber-dim)">🎯</div>
+          <div class="insight-body">
+            <p class="insight-title">H-1B cap-gap alert for 2 employees</p>
+            <p class="insight-sub">Ravi Kumar and Sofia Lopez are in cap-gap. Their OPT authorization automatically extends while H-1B is pending — but you must keep their I-9 updated.</p>
+            <p class="insight-action">Review cap-gap guidance →</p>
+          </div>
+        </div>
+        <div class="insight-item">
+          <div class="insight-ico" style="background:var(--teal-dim)">💡</div>
+          <div class="insight-body">
+            <p class="insight-title">University pipeline opportunity</p>
+            <p class="insight-sub">4 Compass student users from SCU MSCS are actively looking for OPT roles in AI and data science — directly matching your open headcount needs.</p>
+            <p class="insight-action">View matched candidates →</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NETWORK EFFECT BANNER -->
+    <div class="network-banner fade-up">
+      <div class="nb-icon">🔗</div>
+      <div style="flex:1">
+        <p class="nb-title">Compass student network — connected to your pipeline</p>
+        <p class="nb-sub">4 Compass student users who accepted offers at TechCorp are now tracked on your dashboard automatically. Their compliance data syncs in real time — no manual entry. This is the Compass network effect: students onboard themselves.</p>
+      </div>
+      <div class="nb-stat">
+        <p class="nb-num">4</p>
+        <p class="nb-label">auto-synced this month</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

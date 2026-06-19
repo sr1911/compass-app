@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compass — Always know where you are and what's next</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --ink:#08080F;
+  --ink-soft:#12121E;
+  --ink-mid:#1C1C2E;
+  --surface:#1E1E30;
+  --surface-up:#252538;
+  --rim:rgba(255,255,255,0.07);
+  --rim-bright:rgba(255,255,255,0.13);
+  --violet:#7B6EF6;
+  --violet-bright:#9B8FFF;
+  --violet-dim:rgba(123,110,246,0.15);
+  --teal:#00D4A8;
+  --teal-dim:rgba(0,212,168,0.12);
+  --amber:#F5A623;
+  --amber-dim:rgba(245,166,35,0.12);
+  --rose:#FF6B8A;
+  --white:#FFFFFF;
+  --text:#E8E8F0;
+  --text-soft:#9090A8;
+  --text-dim:#5A5A72;
+  --r-sm:8px;
+  --r-md:12px;
+  --r-lg:18px;
+  --r-xl:24px;
+}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--ink);
+  color:var(--text);
+  height:100vh;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
+}
+
+/* ── NAV ── */
+nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;height:56px;
+  border-bottom:1px solid var(--rim);
+  background:rgba(8,8,15,0.8);
+  backdrop-filter:blur(20px);
+  position:relative;z-index:10;
+  flex-shrink:0;
+}
+
+.logo{
+  font-family:'Fraunces',serif;
+  font-size:20px;font-weight:400;
+  color:var(--white);
+  display:flex;align-items:center;gap:10px;
+  letter-spacing:-0.02em;
+}
+
+.logo-mark{
+  width:28px;height:28px;
+  background:linear-gradient(135deg,var(--violet),var(--teal));
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:500;color:white;
+  font-family:'DM Sans',sans-serif;
+}
+
+.nav-center{
+  display:flex;gap:2px;
+  background:var(--surface);
+  border:1px solid var(--rim);
+  border-radius:10px;
+  padding:3px;
+}
+
+.nav-tab{
+  font-size:13px;font-weight:400;
+  padding:6px 20px;border-radius:7px;
+  cursor:pointer;border:none;
+  color:var(--text-soft);background:transparent;
+  font-family:'DM Sans',sans-serif;
+  transition:all 0.2s;
+}
+.nav-tab.active{
+  background:var(--ink-mid);
+  color:var(--text);
+  box-shadow:0 1px 4px rgba(0,0,0,0.4);
+}
+
+.nav-right{display:flex;align-items:center;gap:12px}
+
+.status-indicator{
+  display:flex;align-items:center;gap:7px;
+  font-size:12px;color:var(--text-soft);
+  background:var(--surface);
+  border:1px solid var(--rim);
+  border-radius:99px;padding:5px 12px;
+}
+
+.pulse{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--teal);
+  box-shadow:0 0 0 0 rgba(0,212,168,0.4);
+  animation:pulse-ring 2s infinite;
+}
+@keyframes pulse-ring{
+  0%{box-shadow:0 0 0 0 rgba(0,212,168,0.4)}
+  70%{box-shadow:0 0 0 6px rgba(0,212,168,0)}
+  100%{box-shadow:0 0 0 0 rgba(0,212,168,0)}
+}
+
+.avatar-btn{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--violet),var(--teal));
+  border:none;cursor:pointer;
+  font-family:'Fraunces',serif;font-size:13px;color:white;
+}
+
+/* ── LAYOUT ── */
+.app{
+  display:grid;
+  grid-template-columns:240px 1fr 256px;
+  flex:1;overflow:hidden;
+  position:relative;z-index:1;
+}
+
+/* ── SIDEBAR LEFT ── */
+.sidebar-l{
+  border-right:1px solid var(--rim);
+  padding:20px 16px;
+  overflow-y:auto;
+  display:flex;flex-direction:column;gap:20px;
+  background:rgba(18,18,30,0.5);
+}
+
+.profile-card{
+  background:linear-gradient(135deg,rgba(123,110,246,0.12),rgba(0,212,168,0.06));
+  border:1px solid rgba(123,110,246,0.2);
+  border-radius:var(--r-lg);
+  padding:16px;
+}
+
+.profile-avatar{
+  width:40px;height:40px;border-radius:12px;
+  background:linear-gradient(135deg,var(--violet),var(--teal));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fraunces',serif;font-size:16px;color:white;
+  margin-bottom:10px;
+}
+
+.profile-name{font-size:14px;font-weight:500;color:var(--white);margin-bottom:3px}
+.profile-meta{font-size:11px;color:var(--text-soft);margin-bottom:2px}
+
+.status-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:10px;font-weight:500;
+  background:var(--teal-dim);color:var(--teal);
+  border:1px solid rgba(0,212,168,0.2);
+  border-radius:99px;padding:3px 9px;margin-top:8px;
+}
+
+.slabel{
+  font-size:10px;font-weight:500;
+  color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;
+  margin-bottom:8px;
+}
+
+.stage-item{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 10px;border-radius:var(--r-sm);
+  cursor:pointer;transition:all 0.15s;
+  margin-bottom:2px;border:1px solid transparent;
+}
+.stage-item:hover{background:var(--surface)}
+.stage-item.s-done{opacity:0.45}
+.stage-item.s-active{
+  background:var(--violet-dim);
+  border-color:rgba(123,110,246,0.2);
+}
+
+.stage-ico{
+  width:26px;height:26px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;
+}
+.stage-ico.ico-done{background:var(--teal-dim)}
+.stage-ico.ico-active{background:var(--violet-dim)}
+.stage-ico.ico-pending{background:rgba(255,255,255,0.04)}
+
+.stage-name{font-size:12px;color:var(--text);flex:1}
+.stage-name.active-name{color:var(--violet-bright);font-weight:500}
+.stage-name.dim-name{color:var(--text-dim)}
+.stage-check{font-size:11px;color:var(--teal)}
+
+.prog-item{margin-bottom:10px}
+.prog-header{display:flex;justify-content:space-between;margin-bottom:5px}
+.prog-label{font-size:11px;color:var(--text-soft)}
+.prog-val{font-size:11px}
+.prog-track{height:3px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--violet),var(--teal))}
+
+/* ── PAGES ── */
+.page{display:none;flex-direction:column;overflow:hidden;flex:1}
+.page.visible{display:flex}
+
+/* ── CHAT ── */
+.chat-top{
+  padding:14px 22px;
+  border-bottom:1px solid var(--rim);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+
+.chat-top-left .ct-title{font-size:14px;font-weight:500;color:var(--white)}
+.chat-top-left .ct-sub{font-size:11px;color:var(--text-soft);margin-top:2px}
+
+.urgency-tag{
+  font-size:11px;font-weight:500;
+  background:var(--amber-dim);color:var(--amber);
+  border:1px solid rgba(245,166,35,0.2);
+  border-radius:99px;padding:5px 13px;
+  display:flex;align-items:center;gap:6px;
+}
+
+.urgency-dot{width:6px;height:6px;border-radius:50%;background:var(--amber);animation:pulse-ring 1.5s infinite}
+
+.msgs{
+  flex:1;overflow-y:auto;
+  padding:22px;
+  display:flex;flex-direction:column;gap:16px;
+  scroll-behavior:smooth;
+}
+
+.msg{display:flex;gap:10px;max-width:88%}
+.msg.user{align-self:flex-end;flex-direction:row-reverse}
+
+.msg-av{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:500;flex-shrink:0;margin-top:2px;
+}
+.msg-av.av-compass{
+  background:linear-gradient(135deg,var(--violet),var(--teal));
+  font-family:'Fraunces',serif;font-size:13px;
+}
+.msg-av.av-user{
+  background:var(--surface-up);
+  border:1px solid var(--rim-bright);
+  color:var(--text-soft);font-size:11px;
+}
+
+.msg-wrap{flex:1}
+.msg-sender{font-size:10px;font-weight:500;color:var(--text-dim);margin-bottom:5px;letter-spacing:0.06em;text-transform:uppercase}
+.msg.user .msg-sender{text-align:right}
+
+.msg-bub{
+  padding:12px 15px;border-radius:var(--r-lg);
+  font-size:13px;line-height:1.65;
+}
+.msg.compass .msg-bub{
+  background:var(--surface);
+  border:1px solid var(--rim-bright);
+  border-radius:4px var(--r-lg) var(--r-lg) var(--r-lg);
+}
+.msg.user .msg-bub{
+  background:linear-gradient(135deg,rgba(123,110,246,0.9),rgba(123,110,246,0.7));
+  border-radius:var(--r-lg) 4px var(--r-lg) var(--r-lg);
+}
+
+.alert-card{
+  background:rgba(245,166,35,0.06);
+  border:1px solid rgba(245,166,35,0.18);
+  border-radius:10px;padding:11px 13px;margin-top:10px;
+  font-size:12px;line-height:1.65;
+}
+.alert-head{font-size:10px;font-weight:600;color:var(--amber);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px}
+.alert-teal{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.18);border-radius:10px;padding:11px 13px;margin-top:10px;font-size:12px;line-height:1.65}
+.alert-teal-head{font-size:10px;font-weight:600;color:var(--teal);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px}
+
+.alist{list-style:none;margin-top:6px}
+.alist li{font-size:12px;color:rgba(232,232,240,0.85);padding:3px 0 3px 16px;position:relative}
+.alist li::before{content:'→';position:absolute;left:0;color:var(--teal);font-size:11px}
+
+/* QUICK ASKS */
+.quick-row{
+  display:flex;gap:7px;padding:0 22px 12px;flex-wrap:wrap;flex-shrink:0;
+}
+.qbtn{
+  font-size:11px;background:var(--surface);border:1px solid var(--rim-bright);
+  color:var(--text-soft);padding:6px 13px;border-radius:99px;
+  cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;
+}
+.qbtn:hover{background:var(--violet-dim);border-color:rgba(123,110,246,0.3);color:var(--text)}
+
+/* INPUT */
+.input-row{
+  padding:14px 22px;border-top:1px solid var(--rim);
+  display:flex;gap:10px;align-items:center;flex-shrink:0;
+  background:rgba(8,8,15,0.4);
+}
+.chat-in{
+  flex:1;background:var(--surface);border:1px solid var(--rim-bright);
+  border-radius:var(--r-md);padding:11px 16px;font-size:13px;
+  color:var(--text);font-family:'DM Sans',sans-serif;outline:none;
+  transition:border-color 0.2s;
+}
+.chat-in:focus{border-color:rgba(123,110,246,0.5)}
+.chat-in::placeholder{color:var(--text-dim)}
+.send-btn{
+  width:40px;height:40px;background:var(--violet);border:none;
+  border-radius:var(--r-md);color:white;cursor:pointer;font-size:16px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:all 0.2s;font-family:'DM Sans',sans-serif;
+}
+.send-btn:hover{background:var(--violet-bright);transform:scale(1.05)}
+.send-btn:active{transform:scale(0.97)}
+
+/* TYPING */
+.typing{display:flex;gap:10px;align-items:center}
+.typing-bub{display:flex;gap:4px;padding:12px 14px;background:var(--surface);border:1px solid var(--rim-bright);border-radius:4px var(--r-lg) var(--r-lg) var(--r-lg)}
+.tdot{width:5px;height:5px;border-radius:50%;background:var(--text-dim);animation:tdot 1.2s infinite}
+.tdot:nth-child(2){animation-delay:.2s}
+.tdot:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+
+/* ── CAREER PAGE ── */
+.career-top{
+  padding:14px 22px;border-bottom:1px solid var(--rim);
+  display:flex;align-items:flex-start;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;flex-shrink:0;
+}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap}
+.fchip{
+  font-size:11px;padding:5px 12px;border-radius:99px;
+  cursor:pointer;border:1px solid var(--rim);color:var(--text-soft);
+  background:none;font-family:'DM Sans',sans-serif;transition:all 0.2s;
+}
+.fchip.on{background:var(--violet-dim);border-color:rgba(123,110,246,0.35);color:var(--violet-bright)}
+
+.career-body{flex:1;overflow-y:auto;padding:18px 22px;display:flex;flex-direction:column;gap:14px}
+
+.match-banner{
+  background:linear-gradient(135deg,rgba(123,110,246,0.1),rgba(0,212,168,0.06));
+  border:1px solid rgba(123,110,246,0.2);border-radius:var(--r-lg);
+  padding:14px 16px;display:flex;gap:12px;align-items:flex-start;
+}
+.mb-icon{font-size:22px;flex-shrink:0;margin-top:1px}
+.mb-title{font-size:13px;font-weight:500;color:var(--white);margin-bottom:4px}
+.mb-sub{font-size:12px;color:var(--text-soft);line-height:1.55}
+
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.sec-title{font-size:12px;font-weight:500;color:var(--text-soft)}
+.see-all{font-size:11px;color:var(--violet-bright);cursor:pointer}
+
+.job-card{
+  background:var(--surface);border:1px solid var(--rim-bright);
+  border-radius:var(--r-lg);padding:16px;cursor:pointer;
+  transition:all 0.2s;margin-bottom:10px;
+}
+.job-card:hover{border-color:rgba(123,110,246,0.3);transform:translateY(-1px)}
+.job-card.featured{border-color:rgba(0,212,168,0.3)}
+.job-card.featured:hover{border-color:rgba(0,212,168,0.5)}
+
+.jc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.jc-co{font-size:11px;color:var(--text-dim);margin-bottom:3px}
+.jc-title{font-size:14px;font-weight:500;color:var(--white)}
+
+.match-ring{
+  width:48px;height:48px;border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border:2px solid var(--teal);background:var(--teal-dim);flex-shrink:0;
+}
+.match-num{font-family:'Fraunces',serif;font-size:16px;font-weight:400;color:var(--teal);line-height:1}
+.match-pct{font-size:8px;color:var(--teal);opacity:0.7}
+
+.badge-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.jbadge{font-size:10px;font-weight:500;padding:3px 8px;border-radius:99px}
+.jb-ev{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(0,212,168,0.2)}
+.jb-cpt{background:var(--violet-dim);color:var(--violet-bright);border:1px solid rgba(123,110,246,0.2)}
+.jb-opt{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,166,35,0.2)}
+.jb-stem{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(0,212,168,0.2)}
+.jb-hot{background:rgba(255,107,138,0.12);color:var(--rose);border:1px solid rgba(255,107,138,0.2)}
+
+.jc-meta{display:flex;gap:14px;font-size:11px;color:var(--text-dim);margin-bottom:10px}
+
+.compass-says{
+  background:rgba(123,110,246,0.08);border:1px solid rgba(123,110,246,0.15);
+  border-radius:var(--r-sm);padding:9px 12px;
+  font-size:12px;color:rgba(232,232,240,0.8);line-height:1.6;
+}
+.cs-label{font-size:9px;font-weight:600;color:var(--violet-bright);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px}
+
+.deadline-alert{
+  background:rgba(245,166,35,0.06);border:1px solid rgba(245,166,35,0.15);
+  border-radius:var(--r-md);padding:13px 15px;
+}
+.da-head{font-size:10px;font-weight:600;color:var(--amber);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px}
+.da-title{font-size:13px;font-weight:500;color:var(--white);margin-bottom:4px}
+.da-body{font-size:12px;color:var(--text-soft);line-height:1.5}
+.da-btn{
+  margin-top:10px;font-size:12px;padding:7px 14px;border-radius:var(--r-sm);
+  background:var(--amber-dim);border:1px solid rgba(245,166,35,0.25);
+  color:var(--amber);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;
+}
+.da-btn:hover{background:rgba(245,166,35,0.2)}
+
+/* ── SIDEBAR RIGHT ── */
+.sidebar-r{
+  border-left:1px solid var(--rim);
+  padding:20px 16px;overflow-y:auto;
+  display:flex;flex-direction:column;gap:18px;
+  background:rgba(18,18,30,0.5);
+}
+
+.countdown-card{
+  background:linear-gradient(135deg,rgba(123,110,246,0.18),rgba(0,212,168,0.08));
+  border:1px solid rgba(123,110,246,0.25);
+  border-radius:var(--r-lg);padding:18px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.countdown-card::before{
+  content:'';position:absolute;top:-30px;right:-30px;
+  width:80px;height:80px;border-radius:50%;
+  background:radial-gradient(circle,rgba(123,110,246,0.2),transparent 70%);
+}
+
+.cd-label{font-size:10px;font-weight:500;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px}
+.cd-num{font-family:'Fraunces',serif;font-size:52px;color:var(--white);line-height:1;margin-bottom:3px}
+.cd-unit{font-size:12px;color:var(--text-soft);margin-bottom:12px}
+.cd-bar{height:3px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;margin-bottom:8px}
+.cd-fill{height:100%;width:52%;background:linear-gradient(90deg,var(--violet),var(--teal));border-radius:99px}
+.cd-sub{font-size:11px;color:var(--amber)}
+
+.dl-item{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-bottom:1px solid var(--rim)}
+.dl-item:last-child{border-bottom:none}
+.dl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.dl-title{font-size:12px;font-weight:500;color:var(--text);margin-bottom:2px}
+.dl-date{font-size:11px;color:var(--text-dim)}
+.dl-urgent{font-size:10px;color:var(--amber);font-weight:500}
+
+.verdict-card{background:var(--surface);border:1px solid var(--rim-bright);border-radius:var(--r-md);padding:13px}
+.vrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.vrow:last-child{margin-bottom:0}
+.vlabel{font-size:12px;color:var(--text-soft)}
+.vval{font-size:12px;font-weight:500}
+.v-good{color:var(--teal)}
+.v-warn{color:var(--amber)}
+.v-white{color:var(--white)}
+
+/* UTILS */
+.hidden{display:none!important}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp 0.35s ease forwards}
+
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:99px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-mark">C</div>
+    Compass
+  </div>
+  <div class="nav-center">
+    <button class="nav-tab active" id="tab-navigate" onclick="switchTab('navigate')">Navigate</button>
+    <button class="nav-tab" id="tab-career" onclick="switchTab('career')">Career</button>
+  </div>
+  <div class="nav-right">
+    <div class="status-indicator">
+      <div class="pulse"></div>
+      F-1 · OPT Active
+    </div>
+    <button class="avatar-btn">S</button>
+  </div>
+</nav>
+
+<div class="app">
+
+  <!-- LEFT SIDEBAR -->
+  <div class="sidebar-l">
+    <div>
+      <p class="slabel">Profile</p>
+      <div class="profile-card">
+        <div class="profile-avatar">S</div>
+        <p class="profile-name">Shazia Rahman</p>
+        <p class="profile-meta">F-1 Visa · MSCS</p>
+        <p class="profile-meta">Santa Clara University · 2025</p>
+        <span class="status-badge"><span style="width:5px;height:5px;border-radius:50%;background:var(--teal);display:inline-block"></span>OPT Window Open</span>
+      </div>
+    </div>
+
+    <div>
+      <p class="slabel">Journey</p>
+      <div class="stage-item s-done"><div class="stage-ico ico-done">✈️</div><span class="stage-name">Arrival setup</span><span class="stage-check">✓</span></div>
+      <div class="stage-item s-done"><div class="stage-ico ico-done">📚</div><span class="stage-name">Maintaining status</span><span class="stage-check">✓</span></div>
+      <div class="stage-item s-done"><div class="stage-ico ico-done">💼</div><span class="stage-name">CPT & internships</span><span class="stage-check">✓</span></div>
+      <div class="stage-item s-active"><div class="stage-ico ico-active">⏱</div><span class="stage-name active-name">OPT navigation</span></div>
+      <div class="stage-item"><div class="stage-ico ico-pending">🌱</div><span class="stage-name dim-name">STEM OPT extension</span></div>
+      <div class="stage-item"><div class="stage-ico ico-pending">🚀</div><span class="stage-name dim-name">H-1B & beyond</span></div>
+    </div>
+
+    <div>
+      <p class="slabel">OPT Checklist</p>
+      <div class="prog-item">
+        <div class="prog-header"><span class="prog-label">DSO recommendation</span><span class="prog-val v-good" style="font-size:11px">Done</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:100%"></div></div>
+      </div>
+      <div class="prog-item">
+        <div class="prog-header"><span class="prog-label">I-765 filed</span><span class="prog-val v-good" style="font-size:11px">Done</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:100%"></div></div>
+      </div>
+      <div class="prog-item">
+        <div class="prog-header"><span class="prog-label">EAD card arrival</span><span class="prog-val v-warn" style="font-size:11px">Pending</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:60%"></div></div>
+      </div>
+      <div class="prog-item">
+        <div class="prog-header"><span class="prog-label">Employer reporting</span><span class="prog-val" style="font-size:11px;color:var(--text-dim)">Not started</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVIGATE PAGE -->
+  <div class="page visible" id="page-navigate">
+    <div class="chat-top">
+      <div class="chat-top-left">
+        <p class="ct-title">OPT Navigator</p>
+        <p class="ct-sub">Personalized to your I-20 end date · Aug 15, 2025</p>
+      </div>
+      <div class="urgency-tag">
+        <div class="urgency-dot"></div>
+        47 days to file I-765
+      </div>
+    </div>
+
+    <div class="msgs" id="chatMsgs">
+      <div class="msg compass fade-up">
+        <div class="msg-av av-compass">C</div>
+        <div class="msg-wrap">
+          <p class="msg-sender">Compass</p>
+          <div class="msg-bub">
+            Welcome back, Shazia. Based on your program end date of <strong>August 15, 2025</strong>, your OPT application window opened <strong>May 17</strong>.
+            <div class="alert-card">
+              <div class="alert-head">⚡ Action required this week</div>
+              <ul class="alist">
+                <li>Request OPT recommendation from your DSO today</li>
+                <li>Gather: I-20, passport bio page, I-94, passport photo</li>
+                <li>File I-765 online — current USCIS processing: 3–5 months</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="msg user fade-up">
+        <div class="msg-av av-user">S</div>
+        <div class="msg-wrap">
+          <p class="msg-sender">Shazia</p>
+          <div class="msg-bub">Can I start working before my EAD card physically arrives?</div>
+        </div>
+      </div>
+
+      <div class="msg compass fade-up">
+        <div class="msg-av av-compass">C</div>
+        <div class="msg-wrap">
+          <p class="msg-sender">Compass</p>
+          <div class="msg-bub">
+            <strong>No</strong> — you cannot begin working until your physical EAD card is in hand, even if USCIS shows approved online. Two conditions must both be true:
+            <ul class="alist" style="margin-top:8px">
+              <li>Physical EAD card has arrived in your mailbox</li>
+              <li>Your OPT start date on your I-765 has passed</li>
+            </ul>
+            <div class="alert-teal">
+              <div class="alert-teal-head">💡 What to ask your DSO</div>
+              "My EAD hasn't arrived and my job starts soon. Can you help me request an expedite from USCIS?"
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="typing" class="typing hidden fade-up">
+        <div class="msg-av av-compass">C</div>
+        <div class="typing-bub">
+          <div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-row">
+      <button class="qbtn" onclick="ask('What is the 90-day unemployment rule?')">90-day unemployment rule</button>
+      <button class="qbtn" onclick="ask('Can I freelance while on OPT?')">Freelance on OPT?</button>
+      <button class="qbtn" onclick="ask('Am I eligible for STEM OPT extension?')">STEM OPT eligibility</button>
+      <button class="qbtn" onclick="ask('How do I check my USCIS case status?')">Check USCIS status</button>
+    </div>
+
+    <div class="input-row">
+      <input type="text" class="chat-in" id="chatIn" placeholder="Ask anything about your F-1 journey…" onkeydown="if(event.key==='Enter')send()">
+      <button class="send-btn" onclick="send()">→</button>
+    </div>
+  </div>
+
+  <!-- CAREER PAGE -->
+  <div class="page" id="page-career">
+    <div class="career-top">
+      <div>
+        <p class="ct-title">Career Match</p>
+        <p class="ct-sub">Jobs filtered to your visa status, timeline & degree · Updated today</p>
+      </div>
+      <div class="filter-row">
+        <span class="fchip on">CPT eligible</span>
+        <span class="fchip on">OPT eligible</span>
+        <span class="fchip on">E-Verify ✓</span>
+        <span class="fchip">Remote</span>
+        <span class="fchip">STEM only</span>
+      </div>
+    </div>
+
+    <div class="career-body">
+      <div class="match-banner">
+        <div class="mb-icon">🧭</div>
+        <div>
+          <p class="mb-title">Compass found 14 jobs that match your exact visa situation</p>
+          <p class="mb-sub">Your CPT window opens in <strong style="color:var(--white)">47 days</strong>. These roles are E-Verify enrolled, CPT/OPT eligible, and align with your MSCS degree. 3 deadlines close within your window — apply now.</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="sec-head">
+          <span class="sec-title">⚡ Closing within your CPT window</span>
+          <span class="see-all">See all →</span>
+        </div>
+
+        <div class="job-card featured">
+          <div class="jc-top">
+            <div>
+              <p class="jc-co">Google · Mountain View, CA</p>
+              <p class="jc-title">Software Engineering Intern</p>
+            </div>
+            <div class="match-ring"><span class="match-num">94</span><span class="match-pct">match</span></div>
+          </div>
+          <div class="badge-row">
+            <span class="jbadge jb-ev">E-Verify ✓</span>
+            <span class="jbadge jb-cpt">CPT eligible</span>
+            <span class="jbadge jb-stem">STEM</span>
+            <span class="jbadge jb-hot">Closes Jul 1</span>
+          </div>
+          <div class="jc-meta"><span>📍 Mountain View</span><span>💰 $55/hr</span><span>⏱ 12 weeks</span></div>
+          <div class="compass-says">
+            <p class="cs-label">🧭 Compass says</p>
+            Closes July 1 — within your CPT window. Google is E-Verify enrolled so you qualify for CPT now and OPT sponsorship later. Apply by June 20 to allow DSO CPT approval time.
+          </div>
+        </div>
+
+        <div class="job-card">
+          <div class="jc-top">
+            <div>
+              <p class="jc-co">Salesforce · San Francisco, CA</p>
+              <p class="jc-title">AI Product Management Intern</p>
+            </div>
+            <div class="match-ring" style="border-color:var(--violet-bright);background:var(--violet-dim)"><span class="match-num" style="color:var(--violet-bright)">88</span><span class="match-pct" style="color:var(--violet-bright)">match</span></div>
+          </div>
+          <div class="badge-row">
+            <span class="jbadge jb-ev">E-Verify ✓</span>
+            <span class="jbadge jb-opt">OPT eligible</span>
+            <span class="jbadge jb-stem">STEM</span>
+          </div>
+          <div class="jc-meta"><span>📍 San Francisco</span><span>💰 $48/hr</span><span>⏱ Summer 2025</span></div>
+          <div class="compass-says">
+            <p class="cs-label">🧭 Compass says</p>
+            Starts August 2025 — aligns with your OPT start date. Role directly relates to MSCS degree. Salesforce sponsors H-1B at 87% rate last cycle.
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="sec-head">
+          <span class="sec-title">🚀 OPT full-time roles — open now</span>
+          <span class="see-all">See all 11 →</span>
+        </div>
+
+        <div class="job-card">
+          <div class="jc-top">
+            <div>
+              <p class="jc-co">Nvidia · Santa Clara, CA</p>
+              <p class="jc-title">ML Engineer — GPU Infrastructure</p>
+            </div>
+            <div class="match-ring"><span class="match-num">91</span><span class="match-pct">match</span></div>
+          </div>
+          <div class="badge-row">
+            <span class="jbadge jb-ev">E-Verify ✓</span>
+            <span class="jbadge jb-opt">OPT eligible</span>
+            <span class="jbadge jb-stem">STEM OPT</span>
+          </div>
+          <div class="jc-meta"><span>📍 Santa Clara</span><span>💰 $145K–$180K</span><span>⏱ Full-time</span></div>
+          <div class="compass-says">
+            <p class="cs-label">🧭 Compass says</p>
+            STEM OPT eligible — adds 24 months to your work authorization. Nvidia sponsors H-1B at very high rates. Flexible start Aug–Oct aligns with your OPT window.
+          </div>
+        </div>
+
+        <div class="job-card">
+          <div class="jc-top">
+            <div>
+              <p class="jc-co">Anthropic · San Francisco, CA</p>
+              <p class="jc-title">Research Engineer</p>
+            </div>
+            <div class="match-ring" style="border-color:var(--violet-bright);background:var(--violet-dim)"><span class="match-num" style="color:var(--violet-bright)">85</span><span class="match-pct" style="color:var(--violet-bright)">match</span></div>
+          </div>
+          <div class="badge-row">
+            <span class="jbadge jb-ev">E-Verify ✓</span>
+            <span class="jbadge jb-opt">OPT eligible</span>
+            <span class="jbadge jb-stem">STEM OPT</span>
+          </div>
+          <div class="jc-meta"><span>📍 San Francisco</span><span>💰 $160K–$200K</span><span>⏱ Full-time</span></div>
+          <div class="compass-says">
+            <p class="cs-label">🧭 Compass says</p>
+            AI research role directly matches MSCS degree for OPT field requirement. Apply now — 8-week process aligns with your OPT start date.
+          </div>
+        </div>
+      </div>
+
+      <div class="deadline-alert">
+        <p class="da-head">⚡ CPT deadline alert</p>
+        <p class="da-title">3 roles close before your CPT window opens</p>
+        <p class="da-body">To apply via CPT, request your DSO recommendation within the next <strong style="color:var(--white)">2 weeks</strong>. Compass can draft the DSO request email for you.</p>
+        <button class="da-btn">Draft DSO email →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="sidebar-r">
+    <div>
+      <p class="slabel">OPT Countdown</p>
+      <div class="countdown-card">
+        <p class="cd-label">Days until I-765 deadline</p>
+        <p class="cd-num">47</p>
+        <p class="cd-unit">days remaining</p>
+        <div class="cd-bar"><div class="cd-fill"></div></div>
+        <p class="cd-sub">⚡ File within the next 2 weeks</p>
+      </div>
+    </div>
+
+    <div>
+      <p class="slabel">Key Deadlines</p>
+      <div class="dl-item">
+        <div class="dl-dot" style="background:var(--amber)"></div>
+        <div><p class="dl-title">File I-765</p><p class="dl-date">By July 6, 2025</p><p class="dl-urgent">⚡ 47 days away</p></div>
+      </div>
+      <div class="dl-item">
+        <div class="dl-dot" style="background:var(--violet-bright)"></div>
+        <div><p class="dl-title">Program end date</p><p class="dl-date">August 15, 2025</p></div>
+      </div>
+      <div class="dl-item">
+        <div class="dl-dot" style="background:var(--teal)"></div>
+        <div><p class="dl-title">OPT start (earliest)</p><p class="dl-date">August 16, 2025</p></div>
+      </div>
+      <div class="dl-item">
+        <div class="dl-dot" style="background:var(--text-dim)"></div>
+        <div><p class="dl-title">Report employer to DSO</p><p class="dl-date">Within 10 days of hire</p></div>
+      </div>
+      <div class="dl-item">
+        <div class="dl-dot" style="background:var(--rose)"></div>
+        <div><p class="dl-title">90-day unemployment limit</p><p class="dl-date">Starts Aug 16, 2025</p></div>
+      </div>
+    </div>
+
+    <div>
+      <p class="slabel">Compass Verdict</p>
+      <div class="verdict-card">
+        <div class="vrow"><span class="vlabel">Status health</span><span class="vval v-good">Good standing</span></div>
+        <div class="vrow"><span class="vlabel">Filing urgency</span><span class="vval v-warn">High</span></div>
+        <div class="vrow"><span class="vlabel">STEM OPT eligible</span><span class="vval v-good">Yes</span></div>
+        <div class="vrow"><span class="vlabel">Jobs matched</span><span class="vval v-white">14</span></div>
+        <div class="vrow"><span class="vlabel">Unemployment days</span><span class="vval v-white">0 / 90</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const R = {
+  "what is the 90-day unemployment rule?": `During your OPT period you cannot be unemployed for more than <strong>90 cumulative days</strong>. The clock starts from your OPT start date — not from graduation.<div class="alert-card" style="margin-top:10px"><div class="alert-head">⚡ Compass tracks this for you</div>Every day without employment counts. Compass alerts you at day 60 so you never get caught off guard. You currently have 0 days used.</div>`,
+  "can i freelance while on opt?": `<strong>Yes</strong> — with conditions. You can freelance or be self-employed on OPT, but:<ul class="alist" style="margin-top:8px"><li>Work must directly relate to your MSCS degree field</li><li>You must work at least 20 hours per week</li><li>Report self-employment to your DSO within 10 days of starting</li><li>Self-employment still counts toward your 90-day unemployment limit</li></ul><div class="alert-teal" style="margin-top:10px"><div class="alert-teal-head">💡 Pro tip</div>Keep detailed records — hours, client names, project descriptions. Your DSO may request documentation.</div>`,
+  "am i eligible for stem opt extension?": `Based on your profile — <strong>MSCS at Santa Clara University</strong> — yes, you are eligible. Requirements you meet:<ul class="alist" style="margin-top:8px"><li>Qualifying STEM CIP code — MSCS qualifies ✓</li><li>Employer must be E-Verify enrolled at time of extension</li><li>File I-765 extension before current OPT expires</li><li>Submit I-983 Training Plan with employer</li></ul><div class="alert-teal" style="margin-top:10px"><div class="alert-teal-head">✓ STEM OPT = 24 extra months</div>Compass will remind you 90 days before your OPT expiry to begin the extension process.</div>`,
+  "how do i check my uscis case status?": `Go to <strong>egov.uscis.gov/casestatus</strong> and enter your I-797 receipt number.<ul class="alist" style="margin-top:8px"><li>Check every 2–3 days once you're 2 months post-filing</li><li>Sign up for free USCIS email and text alerts</li><li>Current I-765 processing time: 3–5 months for online filing</li></ul><div class="alert-card" style="margin-top:10px"><div class="alert-head">⚡ If your EAD is delayed</div>Contact your DSO immediately. They can help request a USCIS expedite if your job start date is at risk.</div>`
+};
+
+function switchTab(t){
+  ['navigate','career'].forEach(id=>{
+    const pg=document.getElementById('page-'+id);
+    const btn=document.getElementById('tab-'+id);
+    if(id===t){pg.classList.add('visible');btn.classList.add('active')}
+    else{pg.classList.remove('visible');btn.classList.remove('active')}
+  });
+}
+
+function ask(q){document.getElementById('chatIn').value=q;send()}
+
+function send(){
+  const inp=document.getElementById('chatIn');
+  const text=inp.value.trim();
+  if(!text)return;
+  inp.value='';
+  const msgs=document.getElementById('chatMsgs');
+  const typing=document.getElementById('typing');
+
+  const um=document.createElement('div');
+  um.className='msg user fade-up';
+  um.innerHTML=`<div class="msg-av av-user">S</div><div class="msg-wrap"><p class="msg-sender">Shazia</p><div class="msg-bub">${text}</div></div>`;
+  msgs.insertBefore(um,typing);
+  typing.classList.remove('hidden');
+  msgs.scrollTop=msgs.scrollHeight;
+
+  const reply=R[text.toLowerCase()]||`That's a great question about your F-1 journey. Based on your program end date of August 15, 2025 and current OPT status:<div class="alert-teal" style="margin-top:8px"><div class="alert-teal-head">💡 Compass guidance</div>For your specific situation, I recommend verifying with your DSO. Would you like me to help you prepare the right questions to ask them — so you walk in prepared, not panicked?</div>`;
+
+  setTimeout(()=>{
+    typing.classList.add('hidden');
+    const am=document.createElement('div');
+    am.className='msg compass fade-up';
+    am.innerHTML=`<div class="msg-av av-compass">C</div><div class="msg-wrap"><p class="msg-sender">Compass</p><div class="msg-bub">${reply}</div></div>`;
+    msgs.insertBefore(am,typing);
+    msgs.scrollTop=msgs.scrollHeight;
+  },1400);
+}
+
+document.getElementById('chatIn').addEventListener('keydown',e=>{if(e.key==='Enter')send()});
+</script>
+</body>
+</html>
